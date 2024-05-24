@@ -1,0 +1,64 @@
+from django.db import models
+
+
+class Client(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Ф.И.О.')
+    email = models.EmailField(unique=True, verbose_name='почта')
+    comment = models.TextField(verbose_name='комментарий')
+
+    def __str__(self):
+        return f'{self.name}: {self.email}'
+
+    class Meta:
+        verbose_name = 'Клиент'
+        verbose_name_plural = 'Клиенты'
+
+
+class Newsletter(models.Model):
+    name = models.CharField(max_length=100, verbose_name='название рассылки', null=True, blank=True, default='Рассылка')
+    start_date = models.DateTimeField(verbose_name='дата и время начала рассылки')
+    end_date = models.DateTimeField(verbose_name='дата и время окончанмя рассылки', null=True, blank=True)
+    periodicity = models.CharField(max_length=100, verbose_name='периодичность', default='ежедневно',
+                                   choices={'ежедневно': 'ежедневно',
+                                            'еженедельно': 'еженедельно',
+                                            'ежемесячно': 'ежемесячно'})
+    status = models.CharField(max_length=100, verbose_name='статус', default='создана',
+                              choices={'создана': 'создана',
+                                       'запущена': 'запущена',
+                                       'завершена': 'завершена'})
+
+    clients = models.ManyToManyField(Client, blank=True, related_name='clients')
+    message = models.OneToOneField('Message', on_delete=models.SET_NULL, blank=True, null=True, related_name='message')
+
+    def __str__(self):
+        return f'{self.name}'
+
+    class Meta:
+        verbose_name = 'Рассылка'
+        verbose_name_plural = 'Рассылки'
+
+
+class Message(models.Model):
+    subject = models.CharField(max_length=100, verbose_name='тема письма')
+    text = models.TextField(verbose_name='текст письма')
+
+    def __str__(self):
+        return f'{self.subject}: {self.text}'
+
+    class Meta:
+        verbose_name = 'Сообщение'
+        verbose_name_plural = 'Сообщения'
+
+
+class Attempt(models.Model):
+    at_date = models.DateTimeField(auto_now_add=True, verbose_name='дата и время последней попытки')
+    is_success = models.BooleanField(default=False, verbose_name='успешность попытки')
+    server_response = models.TextField(default=False, verbose_name='ответ сервера')
+    newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE, related_name='newsletter')
+
+    def __str__(self):
+        return f'{self.at_date}: {self.is_success}'
+
+    class Meta:
+        verbose_name = 'Попытка'
+        verbose_name_plural = 'Попытки'

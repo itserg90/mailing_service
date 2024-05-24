@@ -1,0 +1,20 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <p class="card-text">Тема сообщения: {{ object.subject }}</p>
+                        <p class="card-text">Сообщение: {{ object.text }}</p>
+                        <a class="btn btn-primary" href="{% url 'mailing:message_list' %}" role="button">Назад</a>
+                    </div>
+                </div>
+                <div class="card-footer">
+                </div>
+            </div>
+    </div>
+</div>
+
+{% endblock %}

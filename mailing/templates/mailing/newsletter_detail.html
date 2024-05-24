@@ -1,0 +1,24 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <p class="card-text">Дата начала рассылки: {{ object.start_date }}</p>
+                        <p class="card-text">Дата окончания рассылки: {{ object.end_date }}</p>
+                        <p class="card-text">{{ object.periodicity }}</p>
+                        <p class="card-text">{{ object.status }}</p>
+                        <p class="card-text">{{ object.clients }}</p>
+                        <p class="card-text">{{ object.message }}</p>
+                        <a class="btn btn-primary" href="{% url 'mailing:newsletter_list' %}" role="button">Назад</a>
+                    </div>
+                </div>
+                <div class="card-footer">
+                </div>
+            </div>
+    </div>
+</div>
+
+{% endblock %}

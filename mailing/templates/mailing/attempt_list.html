@@ -1,0 +1,26 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for object in object_list %}
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <p class="card-text">{{ object.newsletter }}</p>
+                        <p class="card-text">{{ object.at_date }}</p>
+                        {% if object.is_success %}
+                        <p class="card-text">Успешно</p>
+                        {% else %}
+                        <p class="card-text">Неуспешно</p>
+                        {% endif %}
+                        <p class="card-text">Ответ сервера: {{ object.server_response }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
