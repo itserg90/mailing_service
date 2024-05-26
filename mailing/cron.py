@@ -40,7 +40,6 @@ def newsletter_mail():
             attempt = Attempt.objects.filter(newsletter=obj)
             if attempt.exists():
                 last_date = attempt.order_by('at_date').last()
-                print(last_date)
                 current_timedelta = current_datetime - last_date
                 if current_timedelta <= timedelta(days=1) and obj.periodicity == 'ежедневно':
                     send_newsletter(obj)
@@ -48,3 +47,5 @@ def newsletter_mail():
                     send_newsletter(obj)
                 elif current_timedelta >= timedelta(days=30) and obj.periodicity == 'ежемесячно':
                     send_newsletter(obj)
+            else:
+                send_newsletter(obj)
