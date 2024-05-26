@@ -22,15 +22,18 @@ class Command(BaseCommand):
             for obj in Newsletter.objects.filter(status__in=('создана', 'запущена')):
                 if obj.start_date < current_datetime < obj.end_date:
                     try:
+                        l = [client.email for client in obj.clients.all()]
+                        print(l)
                         server_response = send_mail(
                             f'{obj.message.subject}',
                             f'{obj.message.text}',
                             EMAIL_HOST_USER,
-                            recipient_list=[client.email for client in obj.clients.all()],
+                            recipient_list=l,
                             fail_silently=False,
                         )
                         a = Attempt.objects.create(newsletter=obj, server_response=server_response)
-                        a.is_success = True
+                        if server_response:
+                            a.is_success = True
                         a.save()
                     except smtplib.SMTPException as e:
                         Attempt.objects.create(newsletter=obj, server_response=e)

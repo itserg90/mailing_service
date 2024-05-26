@@ -27,4 +27,4 @@ class ClientAdmin(admin.ModelAdmin):
 
 @admin.register(Attempt)
 class AttemptAdmin(admin.ModelAdmin):
-    list_display = ('id', 'newsletter', 'at_date', 'is_success', 'server_response')
+    list_display = ('id', 'newsletter', 'at_date', 'is_success',)

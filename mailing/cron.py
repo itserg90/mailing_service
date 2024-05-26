@@ -19,7 +19,8 @@ def send_newsletter(obj):
             fail_silently=False,
         )
         a = Attempt.objects.create(newsletter=obj, server_response=server_response)
-        a.is_success = True
+        if server_response:
+            a.is_success = True
         a.save()
     except smtplib.SMTPException as e:
         Attempt.objects.create(newsletter=obj, server_response=e)
