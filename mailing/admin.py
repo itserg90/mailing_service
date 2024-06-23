@@ -1,11 +1,12 @@
 from django.contrib import admin
+from django.forms import modelform_factory
 
 from mailing.models import Newsletter, Message, Client, Attempt
 
 
 @admin.register(Newsletter)
 class NewsletterAdmin(admin.ModelAdmin):
-    list_display = ('id', 'periodicity', 'start_date', 'end_date', 'status')
+    list_display = ('name', 'id', 'periodicity', 'start_date', 'end_date', 'status', 'user')
     list_filter = ('periodicity', 'start_date', 'end_date', 'status')
     search_fields = ('periodicity', 'start_date', 'end_date', 'status')
     readonly_fields = ('status',)
@@ -14,14 +15,14 @@ class NewsletterAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'subject', 'text')
+    list_display = ('id', 'subject', 'text', 'user')
     search_fields = ('subject',)
     ordering = ('subject',)
 
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'email', 'comment')
+    list_display = ('id', 'name', 'email', 'comment', 'user')
     search_fields = ('name', 'email',)
 
 

@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-siv5xl6=k8j$#fv0fefsc5_25j%+4tsfvtcg-_fbly4-czhypg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -40,6 +40,8 @@ INSTALLED_APPS = [
 
     'django_crontab',
     'mailing',
+    'users',
+    'blog',
 ]
 
 MIDDLEWARE = [
@@ -77,7 +79,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'mailing',
         'USER': 'postgres',
     }
@@ -120,6 +122,9 @@ STATICFILES_DIRS = (
     BASE_DIR / 'static',
 )
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -134,3 +139,8 @@ EMAIL_USE_SSL = True
 CRONJOBS = [
     ('*/1 * * * *', 'mailing.cron.newsletter_mail'),
 ]
+
+AUTH_USER_MODEL = 'users.User'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = 'users:login'

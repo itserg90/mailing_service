@@ -189,16 +189,22 @@
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
                 <h1 class="fw-light">Сервис рассылки</h1>
+                {% if user.is_authenticated %}
                 <p class="lead text-body-secondary"></p>
+                {% if not perms.mailing.view_newsletter and not perms.mailing.can_disable_status %}
+                <a href="{% url 'mailing:newsletter_create' %}" class="btn btn-primary my-2">Создать рассылку</a>
+                <a href="{% url 'mailing:message_create' %}" class="btn btn-primary my-2">Создать сообщение</a>
+                <a href="{% url 'mailing:client_create' %}" class="btn btn-primary my-2">Создать клиента</a>
+                {% endif %}
+                {% else %}
+                <h2 class="fw-light">Зарегистрируйтесь и создайте первую рассылку</h2>
                 <p>
-                    <a href="{% url 'mailing:newsletter_create' %}" class="btn btn-primary my-2">Создать рассылку</a>
+                    <a href="{% url 'users:register' %}" class="text-primary">Регистрация</a>
                 </p>
                 <p>
-                    <a href="{% url 'mailing:message_create' %}" class="btn btn-primary my-2">Создать сообщение</a>
+                    <a href="{% url 'users:login' %}" class="text-primary">Вход</a>
                 </p>
-                <p>
-                    <a href="{% url 'mailing:client_create' %}" class="btn btn-primary my-2">Создать клиента</a>
-                </p>
+                {% endif %}
             </div>
         </div>
     </section>

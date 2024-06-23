@@ -6,7 +6,17 @@
             <form class="row" method="post" enctype="multipart/form-data">
                 <div class="col">
                     {% csrf_token %}
+                    {% if not object %}
                     {{ form.as_p }}
+                    {% elif user == object.user %}
+                    {{ form.as_p }}
+                    {% elif perms.mailing.can_disable_status %}
+                    <p>Название: {{ object.name }}
+                    <p/>
+                    <p>Изменить статус рассылки:
+                    <p/>
+                    {{ form.status }}
+                    {% endif %}
                     <button type="submit" class="btn btn-primary">
                         {% if object %}
                         Сохранить

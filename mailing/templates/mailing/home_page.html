@@ -1,0 +1,34 @@
+{% extends 'mailing/base.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for obj in data_list %}
+            <div class="col">
+                <div class="card-body">
+                    <h2 class="card-text">{{ obj }}</h2>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="album py-5 bg-body-tertiary">
+    <div class="container">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for obj in blog %}
+            <div class="col">
+                <div class="card-body">
+                    {% if obj.image %}
+                    <img src="{{ obj.image | media_filter }}">
+                    {% endif %}
+                    <h2 class="card-text">{{ obj.title }}</h2>
+                    <h3 class="card-text">{{ obj.content | truncatewords:50 }}</h3>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
