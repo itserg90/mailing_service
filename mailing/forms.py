@@ -1,6 +1,5 @@
 from django import forms
 
-from mailing.mixins import UserAutofillMixin
 from mailing.models import Client, Newsletter, Message
 
 
@@ -20,14 +19,9 @@ class NewsletterForm(forms.ModelForm):
 class StatusNewsletterForm(forms.ModelForm):
     class Meta:
         model = Newsletter
-        fields = ('status',)
+        fields = ('name', 'status',)
 
     def __init__(self, *args, **kwargs):
         """Удаляем лишний словарь, он нужен для другой формы"""
         user = kwargs.pop('user')
         super().__init__(*args, **kwargs)
-
-# class MessageForm(forms.ModelForm):
-#     class Meta:
-#         model = Message
-#         fields = ['subject', 'text']

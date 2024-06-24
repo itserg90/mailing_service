@@ -191,7 +191,7 @@
                 <h1 class="fw-light">Сервис рассылки</h1>
                 {% if user.is_authenticated %}
                 <p class="lead text-body-secondary"></p>
-                {% if not perms.mailing.view_newsletter and not perms.mailing.can_disable_status %}
+                {% if not perms.mailing.can_disable_newsletter and not perms.users.can_disable_user %}
                 <a href="{% url 'mailing:newsletter_create' %}" class="btn btn-primary my-2">Создать рассылку</a>
                 <a href="{% url 'mailing:message_create' %}" class="btn btn-primary my-2">Создать сообщение</a>
                 <a href="{% url 'mailing:client_create' %}" class="btn btn-primary my-2">Создать клиента</a>

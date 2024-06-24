@@ -10,7 +10,7 @@
                     {{ form.as_p }}
                     {% elif user == object.user %}
                     {{ form.as_p }}
-                    {% elif perms.mailing.can_disable_status %}
+                    {% elif perms.mailing.can_disable_newsletter %}
                     <p>Название: {{ object.name }}
                     <p/>
                     <p>Изменить статус рассылки:

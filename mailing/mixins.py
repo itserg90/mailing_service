@@ -27,7 +27,7 @@ class OwnerManagerMixin:
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
-        perms = ['mailing.can_disable_status', 'mailing.view_newsletter']
+        perms = ['mailing.can_disable_newsletter', 'users.can_disable_user']
         if self.request.user == self.object.user or self.request.user.has_perms(perms):
             return self.object
         raise PermissionDenied
@@ -38,7 +38,7 @@ class NotManagerMixin:
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        perms = ['mailing.can_disable_status', 'mailing.view_newsletter']
+        perms = ['mailing.can_disable_newsletter', 'users.can_disable_user']
         if self.request.user.has_perms(perms):
             raise PermissionDenied
         return form

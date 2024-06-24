@@ -17,7 +17,7 @@ class ManagerMixin:
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        perms = ['users.view_user', 'users.change_user']
+        perms = ['users.can_disable_user']
         if self.request.user.has_perms(perms):
             return queryset
         raise PermissionDenied

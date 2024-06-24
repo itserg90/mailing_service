@@ -1,4 +1,5 @@
 {% extends 'mailing/base.html' %}
+{% load my_tags %}
 {% block content %}
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
@@ -7,8 +8,10 @@
             <div class="col">
                 <div class="card shadow-sm">
                     <div class="card-body">
+                        {% if object.avatar %}
+                        <img src="{{ object.avatar | media_filter }}">
+                        {% endif %}
                         <p class="card-text">{{ object.email }}</p>
-                        <p class="card-text">{{ object.avatar }}</p>
                         <p class="card-text">{{ object.phone }}</p>
                         <p class="card-text">{{ object.country }}</p>
                         <p class="card-text">{{ object.is_active }}</p>

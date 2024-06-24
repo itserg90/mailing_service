@@ -44,7 +44,7 @@ class Newsletter(models.Model):
         verbose_name = 'Рассылка'
         verbose_name_plural = 'Рассылки'
         permissions = [
-            ('can_disable_status', 'Can disable')
+            ('can_disable_newsletter', 'Can disable newsletter')
         ]
 
 

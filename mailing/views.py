@@ -1,51 +1,33 @@
-from random import shuffle
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from blog.models import Blog
 from mailing.forms import NewsletterForm, StatusNewsletterForm
 from mailing.mixins import UserAutofillMixin, OwnerMixin, OwnerManagerMixin, KwargsMixin, NotManagerMixin
 from mailing.models import Newsletter, Message, Client, Attempt
+from mailing.services import get_three_articles, get_newsletters
 
 
 def home_page(request):
     """Главная страница"""
-    data = {'data_list': [], 'blog': []}
-    newsletters = Newsletter.objects.filter(user=request.user.id)
-    data['data_list'].append(f'Количество рассылок всего: {len(newsletters)}')
-    data['data_list'].append(
-        f'Количество активных рассылок: {len([obj for obj in newsletters if obj.status == "Запущена"])}')
-    data['data_list'].append(
-        f'Количество уникальных клиентов для рассылок: {len(Client.objects.filter(user=request.user.id))}')
+    data = {'newsletters': '', 'active_newsletters': '', 'clients': '', 'blog': []}
 
-    # Получаем 3 случайные статьи
-    blog = list(Blog.objects.all())
-    shuffle(blog)
-    data['blog'].extend(blog[:3])
+    data['newsletters'], data['active_newsletters'], data['clients'] = get_newsletters(request, data)
+
+    data['blog'] = get_three_articles(data)
 
     return render(request, 'mailing/home_page.html', data)
 
 
 class NewsletterListView(LoginRequiredMixin, ListView):
     model = Newsletter
+    ordering = 'user'
 
 
 class NewsletterDetailView(LoginRequiredMixin, OwnerManagerMixin, DetailView):
     model = Newsletter
-
-    def get_form_class(self):
-        if not self.request.user == self.object.user:
-            raise PermissionDenied
-
-    # def get_object(self, queryset=None):
-    #     self.object = super().get_object(queryset)
-    #     self.object.views_count += 1
-    #     self.object.save()
-    #     return self.object
 
 
 class NewsletterCreateView(LoginRequiredMixin, NotManagerMixin, UserAutofillMixin, KwargsMixin, CreateView):
@@ -67,7 +49,7 @@ class NewsletterUpdateView(LoginRequiredMixin, OwnerManagerMixin, KwargsMixin, U
         user = self.request.user
         if user == self.object.user:
             return NewsletterForm
-        if user.has_perms(['mailing.can_disable_status', 'mailing.view_newsletter']):
+        if user.has_perms(['mailing.can_disable_newsletter', 'users.can_disable_user']):
             return StatusNewsletterForm
         raise PermissionDenied
 
@@ -80,31 +62,15 @@ class NewsletterDeleteView(LoginRequiredMixin, OwnerMixin, DeleteView):
 class MessageListView(LoginRequiredMixin, ListView):
     model = Message
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     return queryset.filter(is_published=True)
-
 
 class MessageDetailView(LoginRequiredMixin, OwnerMixin, DetailView):
     model = Message
 
-    # def get_object(self, queryset=None):
-    #     self.object = super().get_object(queryset)
-    #     self.object.views_count += 1
-    #     self.object.save()
-    #     return self.object
-
 
 class MessageCreateView(LoginRequiredMixin, NotManagerMixin, UserAutofillMixin, CreateView):
     model = Message
-    # form_class = MessageForm
     fields = ['subject', 'text']
     success_url = reverse_lazy('mailing:message_list')
-
-    # def form_valid(self, form):
-    #     obj = form.save()
-    #     newsletter_mail(obj)
-    #     return super().form_valid(form)
 
 
 class MessageUpdateView(LoginRequiredMixin, OwnerMixin, UpdateView):
@@ -123,30 +89,15 @@ class MessageDeleteView(LoginRequiredMixin, OwnerMixin, DeleteView):
 class ClientListView(LoginRequiredMixin, ListView):
     model = Client
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     return queryset.filter(is_published=True)
-
 
 class ClientDetailView(LoginRequiredMixin, OwnerMixin, DetailView):
     model = Client
-
-    # def get_object(self, queryset=None):
-    #     self.object = super().get_object(queryset)
-    #     self.object.views_count += 1
-    #     self.object.save()
-    #     return self.object
 
 
 class ClientCreateView(LoginRequiredMixin, NotManagerMixin, UserAutofillMixin, CreateView):
     model = Client
     fields = ['name', 'email', 'comment']
     success_url = reverse_lazy('mailing:client_list')
-
-    # def form_valid(self, form):
-    #     obj = form.save()
-    #     newsletter_mail(obj)
-    #     return super().form_valid(form)
 
 
 class ClientUpdateView(LoginRequiredMixin, OwnerMixin, UpdateView):

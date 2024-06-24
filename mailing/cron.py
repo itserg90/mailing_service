@@ -10,6 +10,7 @@ from mailing.models import Newsletter, Attempt
 
 
 def send_newsletter(obj):
+    """Функция отправки письма"""
     try:
         server_response = send_mail(
             f'{obj.message.subject}',
@@ -24,29 +25,30 @@ def send_newsletter(obj):
         a.save()
     except smtplib.SMTPException as e:
         Attempt.objects.create(newsletter=obj, server_response=e)
-    if obj.status == 'создана':
-        obj.status = 'запущена'
+    if obj.status == 'Создана':
+        obj.status = 'Запущена'
         obj.save()
 
 
 def newsletter_mail():
-    """
-    Функция отправки рассылки
-    """
+    """Отправляет письмо с учетом периодичности рассылки"""
     zone = timezone(settings.TIME_ZONE)
     current_datetime = datetime.now(zone)
 
-    for obj in Newsletter.objects.filter(status__in=('создана', 'запущена')):
+    for obj in Newsletter.objects.filter(status__in=('Создана', 'Запущена')):
         if obj.start_date < current_datetime < obj.end_date:
             attempt = Attempt.objects.filter(newsletter=obj)
             if attempt.exists():
                 last_date = attempt.order_by('at_date').last()
                 current_timedelta = current_datetime - last_date
-                if current_timedelta <= timedelta(days=1) and obj.periodicity == 'ежедневно':
+                if current_timedelta <= timedelta(days=1) and obj.periodicity == 'Ежедневно':
                     send_newsletter(obj)
-                elif current_timedelta >= timedelta(days=7) and obj.periodicity == 'еженедельно':
+                elif current_timedelta >= timedelta(days=7) and obj.periodicity == 'Еженедельно':
                     send_newsletter(obj)
-                elif current_timedelta >= timedelta(days=30) and obj.periodicity == 'ежемесячно':
+                elif current_timedelta >= timedelta(days=30) and obj.periodicity == 'Ежемесячно':
                     send_newsletter(obj)
             else:
                 send_newsletter(obj)
+        elif current_datetime > obj.end_date:
+            obj.status = 'Завершена'
+            obj.save()

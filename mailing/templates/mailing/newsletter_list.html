@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
             {% for object in object_list %}
-            {% if user == object.user or perms.mailing.view_newsletter %}
+            {% if user == object.user or perms.mailing.can_disable_newsletter %}
             <div class="col">
                 <div class="card shadow-sm">
                     <div class="card-body">
@@ -13,7 +13,7 @@
                         <p class="card-text">{{ object.end_date }}</p>
                         <p class="card-text">{{ object.periodicity }}</p>
                         <p class="card-text">{{ object.status }}</p>
-                        {% if perms.mailing.view_newsletter %}
+                        {% if perms.mailing.can_disable_newsletter %}
                         <p class="card-text">{{ object.user }}</p>
                         {% endif %}
                         <div class="d-flex justify-content-between align-items-center">

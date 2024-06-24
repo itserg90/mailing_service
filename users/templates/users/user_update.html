@@ -7,7 +7,11 @@
             <div class="col-6">
                 <div class="col">
                     {% csrf_token %}
+                    {% if object.avatar %}
+                    <img src="{{ object.avatar | media_filter }}">
+                    {% endif %}
                     Изменить статус ползователя:
+                    {{ user }}
                     {{ form.as_p }}
                     <button type="submit" class="btn btn-primary">Сохранить</button>
                     <a href="{% url 'users:user_list' %}" class="btn btn-secondary">Отмена</a>
