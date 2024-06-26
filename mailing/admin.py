@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.forms import modelform_factory
 
 from mailing.models import Newsletter, Message, Client, Attempt
 

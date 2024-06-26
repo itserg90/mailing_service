@@ -1,18 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import PermissionDenied
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from blog.forms import BlogForm
 from blog.models import Blog
-
-
-# class BlogRequiredMixin:
-#     def get_form_class(self):
-#         user = self.request.user
-#         if user.groups.filter(name='content').exists():
-#             return BlogForm
-#         raise PermissionDenied
 
 
 class BlogListView(ListView):
